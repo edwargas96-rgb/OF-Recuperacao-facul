@@ -1,39 +1,45 @@
-# Desafio Nós Dois de Novo: quiz gamificado
+# Salvaê: quiz de recuperação universitária
 
-Quiz para homens que querem reconquistar a esposa. Português do Brasil, tom informal e direto, sem sermão.
-
-- 15 perguntas, 4 joguinhos (colher flores pro buquê, palavras que aproximam ou afastam, montar o café da manhã, memória)
-- XP, níveis, sequência (🔥) e feedbacks aleatórios a cada resposta
-- Resultado com índice de presença, barras por categoria e leitura do que mais afasta o casal
-- Sem dependências nem build: HTML, CSS e JS puros
+Quiz mobile (12 perguntas) que leva ao "Kit de Mapas Mentais" do curso. Next.js + TypeScript + Tailwind + Framer Motion.
 
 ## Rodar
 
 ```bash
-python3 -m http.server 8080
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # confere se compila
 ```
 
-Abra `http://localhost:8080`. Também funciona abrindo `index.html` direto.
+## Onde trocar as coisas
 
-## Onde editar
+Tudo fica em **`lib/quiz-data.ts`**:
 
-| O quê | Arquivo |
+| O quê | Onde |
 |---|---|
-| Perguntas, opções, feedbacks, textos do resultado | `js/data.js` |
-| Regras e pontuação dos joguinhos | `js/games.js` |
-| Imagens e final do quiz (`finalCta`) | `js/config.js` |
-| Visual | `css/style.css` |
+| Preço (`R$ X`) | `PRECO_PADRAO` ou `oferta.preco` de cada curso |
+| Quantidade de mapas (`X mapas`) | `QUANTIDADE_MAPAS_PADRAO` ou `oferta.quantidadeMapas` (null esconde o número) |
+| Bônus e aviso de material de apoio | `bonus` e `avisoMaterialApoio` |
+| Perguntas gamificadas, matérias, mensagem de apoio | dentro de cada curso em `cursos` (marcado `REVISAR CONTEÚDO`) |
+| Perguntas de contexto e ordem do quiz | `situacoes`, `prazos`, `dificuldades`, `temposEstudo`, `objetivos`, `sequencia` |
+| Telas de carregamento | `carregarApos` e `DURACAO_CARREGAMENTO_MS` |
 
-Imagens: veja `assets/img/README.md`.
+## Adicionar um curso
 
-## Final do quiz
+1. Copie um bloco de `cursos` em `lib/quiz-data.ts` e troque `id`, nome, matérias, as 5 perguntas e a mensagem de apoio.
+2. Adicione a linha do checkout em `checkoutPorCurso`, por exemplo `enf: process.env.NEXT_PUBLIC_CHECKOUT_URL_ENF`.
+3. Crie a variável na Vercel. Nenhum componente precisa mudar.
 
-Ainda a definir. Enquanto `finalCta` estiver `null` em `js/config.js`, a tela de resultado mostra um bloco marcado "a definir".
+## Variáveis de ambiente (Vercel → Settings → Environment Variables)
 
-## Preview em arquivo único
+| Variável | Para quê |
+|---|---|
+| `NEXT_PUBLIC_CHECKOUT_URL_ADM` | Link do checkout de Administração |
+| `NEXT_PUBLIC_CHECKOUT_URL_PSICO` | Link do checkout de Psicologia |
+| `NEXT_PUBLIC_CHECKOUT_URL_ODONTO` | Link do checkout de Odontologia |
+| `NEXT_PUBLIC_META_PIXEL_ID` | ID do Meta Pixel |
 
-```bash
-node tools/build-preview.mjs
-```
+Sem link de checkout, o botão mostra "Em breve". O link recebe `curso`, `materia` e as UTMs do anúncio como parâmetros. Depois de mudar uma variável, faça um novo deploy.
 
-Gera `dist/preview.html` com CSS e JS embutidos.
+## Eventos (lib/track.ts)
+
+`quiz_inicio`, `resposta`, `carregamento_fim`, `resultado_visto` (eventos personalizados), `oferta_vista` (→ ViewContent) e `clique_comprar` (→ InitiateCheckout). Em desenvolvimento aparecem no console.

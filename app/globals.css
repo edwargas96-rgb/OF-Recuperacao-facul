@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card { @apply rounded-4xl bg-white p-6 shadow-card; }
+  .btn-primario {
+    @apply flex min-h-14 w-full items-center justify-center rounded-2xl bg-petroleo px-6 text-lg font-extrabold text-white transition
+      hover:bg-petroleo-escuro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-manteiga disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .opcao {
+    @apply flex min-h-14 w-full items-center gap-3 rounded-2xl border-2 border-menta-claro bg-white px-4 py-3 text-left text-base font-bold transition
+      hover:border-menta-escuro active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-manteiga;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
